@@ -1,3 +1,4 @@
+from operator import truediv
 from .chart import price, plot
 from .vol_premium import iv_prem as vol
 from .toolbox import timer
@@ -11,6 +12,7 @@ class Equity():
         self.price = price(ticker.upper())['chart']['close'].iloc[-1]
         self.chart = price(ticker.upper())['chart']
         self.hist_vol = vol(ticker.upper())['historical_vol']
+        self.peg = price(ticker.upper())['fundamental']['pegRatio']
 
     def _plot(self, save_png=False):
         plot(self.chart, self.name, save_png)
@@ -24,6 +26,13 @@ class Equity():
             return str(None)
         else:
             return vol(self.name.upper())['premium']
+
+    @property
+    def is_buy(self):
+        if self.chart['MA10'][-1] > self.chart['MA20'][-1]:
+            return True
+        else:
+            return False
     
     @property
     def iv(self):

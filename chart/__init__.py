@@ -1,4 +1,5 @@
 from chart.model import Equity
+from chart.ticker_tools import ticker_list
 
 
 # if __name__ == 'chart':

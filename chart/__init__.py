@@ -1,5 +1,6 @@
 from chart.model import Equity
-from chart.ticker_tools import ticker_list
+from chart.ticker_tools import ticker_list, index, index_pkl, alpaca_active
+
 
 
 # if __name__ == 'chart':

@@ -1,8 +1,11 @@
+from ast import And, expr_context
 from operator import truediv
 from .chart import price, plot
 from .vol_premium import iv_prem as vol
 from .toolbox import timer
 import pandas as pd
+
+from chart import vol_premium
 
 class Equity():
     @timer
@@ -14,18 +17,28 @@ class Equity():
         self.hist_vol = vol(ticker.upper())['historical_vol']
         self.peg = price(ticker.upper())['fundamental']['pegRatio']
 
+
     def _plot(self, save_png=False):
-        plot(self.chart, self.name, save_png)
+        if self.chart == None:
+            pass
+        else:     
+            plot(self.chart, self.name, save_png)
 
     def _export(self):
+        if self.chart == None:
+            pass
+        else:
             self.chart.to_csv(f'{self.name}.csv')
 
     @property
     def vol_prem(self):
-        if vol(self.name.upper())['premium'] == None:
+        try:
+            if vol(self.name.upper())['premium'] == None:
+                return str(None)
+            else:
+                return vol(self.name.upper())['premium']
+        except KeyError:
             return str(None)
-        else:
-            return vol(self.name.upper())['premium']
 
     @property
     def is_buy(self):
@@ -36,16 +49,19 @@ class Equity():
     
     @property
     def iv(self):
-        if vol(self.name.upper())['implied_vol'] == None:
+        try:
+            if vol(self.name.upper())['implied_vol'] == None:
+                return str(None)
+            else:
+                return vol(self.name.upper())['implied_vol']
+        except KeyError:
             return str(None)
-        else:
-            return vol(self.name.upper())['implied_vol']
 
     def __str__(self):
         return (f'{self.name}: {self.price}\n'
                f'Historical Vol: {self.hist_vol}\n'
                f'Implied Vol: {self.iv}\n'
-               f'Vol Premium: {self.vol_prem}\n')
-    
+               f'Vol Premium: {self.vol_prem}\nBuy: {self.is_buy}\n')
+
 
 

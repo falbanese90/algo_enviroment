@@ -10,4 +10,3 @@ def timer(function):
         stop = timeit.default_timer()
         print(f'TIme: {stop - start}')
     return wrapper
-

@@ -10,3 +10,11 @@ def timer(function):
         stop = timeit.default_timer()
         print(f'TIme: {stop - start}')
     return wrapper
+
+def class_exc_handler(function):
+    @functools.wraps(function)
+    def wrapper(*args, **kwargs):
+        try:
+            function(*args)
+        except AttributeError:
+            pass

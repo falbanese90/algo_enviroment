@@ -2,7 +2,7 @@ from ast import And, expr_context
 from operator import truediv
 from .chart import price, plot
 from .vol_premium import iv_prem as vol
-from .toolbox import timer
+from .toolbox import timer, class_exc_handler
 import pandas as pd
 
 from chart import vol_premium
@@ -10,12 +10,12 @@ from chart import vol_premium
 class Equity():
     @timer
     def __init__(self, ticker):
-        self.name = price(ticker.upper())['fundamental']['symbol']
+        self.name = str(ticker.upper())
         self.fundamental = price(ticker.upper())['fundamental']
         self.price = price(ticker.upper())['chart']['close'].iloc[-1]
         self.chart = price(ticker.upper())['chart']
-        self.hist_vol = vol(ticker.upper())['historical_vol']
-        self.peg = price(ticker.upper())['fundamental']['pegRatio']
+        self.hist_vol = price(ticker.upper())['chart']['HV'][-1]
+        self.peg = price(ticker.upper())['fundamental']['pegRatio'] if 'fundamental' in price(ticker.upper()) else str(None)
 
 
     def _plot(self, save_png=False):
@@ -37,7 +37,7 @@ class Equity():
                 return str(None)
             else:
                 return vol(self.name.upper())['premium']
-        except KeyError:
+        except (KeyError, TypeError):
             return str(None)
 
     @property
@@ -54,7 +54,7 @@ class Equity():
                 return str(None)
             else:
                 return vol(self.name.upper())['implied_vol']
-        except KeyError:
+        except (KeyError, TypeError):
             return str(None)
 
     def __str__(self):

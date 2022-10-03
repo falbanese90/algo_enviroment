@@ -1,14 +1,9 @@
 from http.client import RemoteDisconnected
 import requests
 import pandas as pd
-import os
-import csv
-from datetime import datetime
 import time
 import matplotlib.pyplot as plt
-from config import ameritrade, points
-import pickle as pkl
-from pprint import pprint
+from config import ameritrade
 import math
 import numpy as np
 
@@ -60,10 +55,18 @@ def plot(dataframe, title, save_png=False):
 
 
 def options(ticker):
-    ticker = ticker.upper()
-    result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
-                          params={'apikey': ameritrade, 'symbol': ticker,
-                          'contractType': 'CALL', 'strategy': 'ANALYTICAL', 'strikeCount': '1'})
+    try:
+        ticker = ticker.upper()
+        result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
+                            params={'apikey': ameritrade, 'symbol': ticker,
+                            'contractType': 'CALL', 'strategy': 'ANALYTICAL', 'strikeCount': '1'})
+    except (ConnectionResetError, RemoteDisconnected):
+        print('Connection Resetting, 10 seconds')
+        time.sleep(10)
+        ticker = ticker.upper()
+        result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
+                            params={'apikey': ameritrade, 'symbol': ticker,
+                            'contractType': 'CALL', 'strategy': 'ANALYTICAL', 'strikeCount': '1'})
     data = result.json()
     exp = [n for n in data['callExpDateMap'].keys()]
     strike = {}

@@ -24,10 +24,8 @@ if __name__ == '__main__':
             print(f'{error}\n')
             fail_count += 1
             errors_json[f'{n}'] = f'{traceback.extract_tb(error.__traceback__)}', f'{error}'
-        if success_count == 100:
-            break
         print(f'Success: {success_count} / Fails: {fail_count}')
-    print(f'Fails: {fail_count}\nSuccess: {success_count}\nOut of: {len(t)} requests')
+    print(f'Fails: {fail_count}\nSuccess: {success_count}\nOut of: {len(t)} requests\nCapture Rate: {success_count / fail_count}')
     with open('errors.json', 'w') as file:
         json.dump(errors_json, file, indent=4)
 

@@ -25,7 +25,10 @@ if __name__ == '__main__':
             print(f'{error}\n')
             fail_count += 1
             errors_json[f'{n}'] = f'{traceback.extract_tb(error.__traceback__)}', f'{error}'
-        print(f'Success: {success_count} / Fails: {fail_count}\nCapture Rate: {round(((success_count / fail_count) * 100), 3)}%')
+        if fail_count > 0:
+            print(f'Success: {success_count} / Fails: {fail_count}\nCapture Rate: {round(((success_count / fail_count) * 100), 3)}%')
+        else:
+            print(f'Success: {success_count} / Fails: {fail_count}')
 
     print(f'Fails: {fail_count}\nSuccess: {success_count}\nOut of: {len(t)} requests\nCapture Rate: {round(((success_count / fail_count) * 100), 3)}%')
     with open('errors.json', 'w') as file:

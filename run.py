@@ -2,6 +2,7 @@ import chart
 import json
 import random
 import traceback
+import pickle as pkl
 
 
 if __name__ == '__main__':
@@ -19,14 +20,19 @@ if __name__ == '__main__':
             obj_data = chart.Equity(n)
             print(obj_data)
             success_count += 1
-        except (KeyError, TypeError, AttributeError) as error:
+        except (KeyError, TypeError, AttributeError, ConnectionError) as error:
             print( f'{n}: Unable to load data')
             print(f'{error}\n')
             fail_count += 1
             errors_json[f'{n}'] = f'{traceback.extract_tb(error.__traceback__)}', f'{error}'
-        print(f'Success: {success_count} / Fails: {fail_count}')
-    print(f'Fails: {fail_count}\nSuccess: {success_count}\nOut of: {len(t)} requests\nCapture Rate: {success_count / fail_count}')
+        print(f'Success: {success_count} / Fails: {fail_count}\nCapture Rate: {round(((success_count / fail_count) * 100), 3)}%')
+
+    print(f'Fails: {fail_count}\nSuccess: {success_count}\nOut of: {len(t)} requests\nCapture Rate: {round(((success_count / fail_count) * 100), 3)}%')
     with open('errors.json', 'w') as file:
         json.dump(errors_json, file, indent=4)
+
+    ameritrade_ticker_fails = errors_json.keys()
+    with open('ameritrade_ticker_fails.pkl', 'wb') as file:
+        pkl.dump(ameritrade_ticker_fails, file)
 
 

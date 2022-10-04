@@ -19,9 +19,6 @@ class Equity():
 
 
     def _plot(self, save_png=False):
-        if self.chart == None:
-            pass
-        else:     
             plot(self.chart, self.name, save_png)
 
     def _export(self):

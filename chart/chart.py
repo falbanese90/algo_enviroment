@@ -93,6 +93,8 @@ def get_chart(data_request_json):
     df = df.iloc[:, ::-1]
     df['MA10'] = df['close'].rolling(window=10).mean()
     df['MA20'] = df['close'].rolling(window=20).mean()
+    df['MA50'] = df['close'].rolling(window=50).mean()
+    df['MA100'] = df['close'].rolling(window=100).mean()
     x = 0
     l = []
     for n in df['close']:

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from config import ameritrade
 import math
 import numpy as np
+from .alpaca_tools import api
 
 
 
@@ -82,14 +83,16 @@ def options(ticker):
             x += 1
         return strike[0]
 
-
-
 def get_chart(data_request_json):
     for n in data_request_json['candles']:
         n['datetime'] = pd.to_datetime(n['datetime'], unit='ms').strftime('%m/%d/%Y')
 
     candles = data_request_json['candles']
     df = pd.DataFrame.from_dict(candles)
+    df = add_ta(df)
+    return df
+
+def add_ta(df):
     df = df.iloc[:, ::-1]
     df['MA10'] = df['close'].rolling(window=10).mean()
     df['MA20'] = df['close'].rolling(window=20).mean()

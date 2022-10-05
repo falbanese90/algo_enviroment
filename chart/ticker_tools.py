@@ -1,19 +1,17 @@
 import csv
 import os
-from unittest.result import failfast
-from config import ROOT_PATH, TICKER_PATH, ALPACA_KEY, ALPACA_SECRET, ALPACA_URL
+from config import ROOT_PATH, TICKER_PATH
 from chart import model
 import random
 import pickle as pkl
-import alpaca_trade_api as alpaca
+from .alpaca_tools import api
 
 
 PATH = ROOT_PATH + TICKER_PATH
 
 def alpaca_active():
     tick_list = []
-    api = api = alpaca.REST(ALPACA_KEY, ALPACA_SECRET, ALPACA_URL)
-    active_assets = active_assets = api.list_assets(status='active')
+    active_assets = api.list_assets(status='active')
     for n in active_assets:
         tick_list.append(n.symbol.split('/')[0])
     return tick_list

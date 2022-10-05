@@ -2,5 +2,5 @@ config.py
 __pycache__
 .ipynb_checkpoints/
 pre_m
-../errors.json
-../ameritrade_ticker_fails.pkl
+errors.json
+ameritrade_ticker_fails.pkl

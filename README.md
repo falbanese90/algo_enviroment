@@ -1,4 +1,4 @@
-## Inspired by the pandas tutorial by [Free Code Camp](www.youtube.com/watch?v=HXGtLIoiv3Q&t=2872s)
+## Algorithmic Stock Trader Enviroment
 
 
 > Uses the tdameritrade api to scan selected ticker. The ticker's attributes are then passed to an Equity class that 

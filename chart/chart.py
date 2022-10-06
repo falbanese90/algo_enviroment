@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from config import ameritrade
 import math
 import numpy as np
-from .alpaca_tools import api
+from .alpaca_tools import api, get_df
 
 
 
@@ -34,7 +34,11 @@ def price(ticker):
         dict = {'chart': df, 'fundamental': fd}
         return dict
     except KeyError:
-        pass
+        df = get_df(ticker)
+        df = add_ta(df)
+        fd = None
+        dict = {'chart': df, 'fundamental': fd}
+        return dict
 
 
 def plot(dataframe, title, save_png=False):

@@ -11,12 +11,9 @@ class Equity():
     @timer
     def __init__(self, ticker):
         self.name = str(ticker.upper())
-        self.fundamental = price(ticker.upper())['fundamental']
         self.price = price(ticker.upper())['chart']['close'].iloc[-1]
         self.chart = price(ticker.upper())['chart']
         self.hist_vol = price(ticker.upper())['chart']['HV'][-1]
-        self.peg = price(ticker.upper())['fundamental']['pegRatio'] if 'fundamental' in price(ticker.upper()) else str(None)
-
 
     def _plot(self, save_png=False):
             plot(self.chart, self.name, save_png)

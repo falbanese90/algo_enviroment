@@ -7,6 +7,8 @@ from config import ameritrade
 import math
 import numpy as np
 from .alpaca_tools import api, get_df
+from requests.exceptions import ConnectionError
+from stockstats import wrap
 
 
 
@@ -17,18 +19,23 @@ def price(ticker):
             result = requests.get('https://api.tdameritrade.com/v1/instruments',
                                 params={'apikey': ameritrade, 'symbol': ticker,
                                 'projection': 'fundamental'})
-        except (ConnectionResetError, RemoteDisconnected):
-            print('Connection Resetting, 10 seconds')
-            time.sleep(10)
+        except ConnectionError as err:
+            print(err)
+            time.sleep(60)
             ticker = ticker.upper()
             result = requests.get('https://api.tdameritrade.com/v1/instruments',
                                 params={'apikey': ameritrade, 'symbol': ticker,
                                 'projection': 'fundamental'})
         data = result.json()
         fd = data[ticker]['fundamental'] if 'fundamental' in data[ticker] else None
-
-        result  = requests.get(f'https://api.tdameritrade.com/v1/marketdata/{ticker}/pricehistory', 
-                            params={'apikey': ameritrade, 'periodType': 'year', 'frequencyType': 'daily'})
+        try:
+            result  = requests.get(f'https://api.tdameritrade.com/v1/marketdata/{ticker}/pricehistory', 
+                                params={'apikey': ameritrade, 'periodType': 'year', 'frequencyType': 'daily'})
+        except ConnectionError as err:
+            print(err)
+            time.sleep(60)
+            result  = requests.get(f'https://api.tdameritrade.com/v1/marketdata/{ticker}/pricehistory', 
+                                params={'apikey': ameritrade, 'periodType': 'year', 'frequencyType': 'daily'})
         data = result.json()
         df = get_chart(data)
         dict = {'chart': df, 'fundamental': fd}
@@ -98,10 +105,13 @@ def get_chart(data_request_json):
 
 def add_ta(df):
     df = df.iloc[:, ::-1]
+    stats = wrap(df)
     df['MA10'] = df['close'].rolling(window=10).mean()
     df['MA20'] = df['close'].rolling(window=20).mean()
     df['MA50'] = df['close'].rolling(window=50).mean()
     df['MA100'] = df['close'].rolling(window=100).mean()
+    df['Volume20MA'] = df['volume'].rolling(window=20).mean()
+    df['RSI'] = stats['rsi']
     x = 0
     l = []
     for n in df['close']:

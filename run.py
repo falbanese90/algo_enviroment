@@ -1,9 +1,11 @@
+from xmlrpc.client import ResponseError
 import chart
 import json
 import random
 import traceback
 import pickle as pkl
 import time
+from chart.trade import buy
 
 def run_clean():
     x = 0
@@ -25,6 +27,9 @@ def run_clean():
                     print(obj_data)
                     success_count += 1
                     x += 1
+                    buy('AAPL', 1)
+                    if obj_data.is_buy == True:
+                        buy('AAPL', 100)
                     if success_count % 50 == 0:
                         time.sleep(30)
                 except (KeyError, TypeError, AttributeError, ConnectionError) as error:
@@ -67,6 +72,8 @@ def run_errors():
                 print(obj_data)
                 success_count += 1
                 x += 1
+                if obj_data.is_buy == True:
+                        buy(obj_data.name, 5)
                 if success_count % 50 == 0:
                     time.sleep(30)
             except (KeyError, TypeError, AttributeError, ConnectionError) as error:
@@ -79,7 +86,7 @@ def run_errors():
                 print(f'Success: {success_count} / Fails: {fail_count}\nCapture Rate: {round(((success_count / (success_count + fail_count)) * 100), 3)}%')
             else:
                 print(f'Success: {success_count} / Fails: {fail_count}\nCapture Rate: 100%')
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ConnectionResetError, ResponseError):
         print('Updating Bad Ticker List before Executing')
 
     print(f'Fails: {fail_count}\nSuccess: {success_count}\nOut of: {len(t)} requests\nCapture Rate: {round(((success_count / (success_count + fail_count)) * 100), 3)}%')

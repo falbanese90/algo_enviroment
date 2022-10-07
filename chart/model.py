@@ -35,11 +35,31 @@ class Equity():
             return str(None)
 
     @property
-    def is_buy(self):
+    def intermediate_trend(self):
         if self.chart['MA10'][-1] > self.chart['MA20'][-1]:
             return True
         else:
             return False
+
+    @property
+    def rsi_positive(self):
+        if 40 <= self.chart['RSI'][-1] <= 60:
+            return True
+        else:
+            return False
+
+    @property
+    def is_buy(self):
+        counter = 0
+        if self.intermediate_trend:
+            counter += 1
+        if self.rsi_positive:
+            counter += 1
+        if counter == 2:
+            return True
+        else:
+            return False
+
     
     @property
     def iv(self):

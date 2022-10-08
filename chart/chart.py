@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from config import ameritrade
 import math
 import numpy as np
-from .alpaca_tools import api, get_df
+from .alpaca_tools import get_df
 from requests.exceptions import ConnectionError
 from stockstats import wrap
 
@@ -33,7 +33,7 @@ def price(ticker):
                                 params={'apikey': ameritrade, 'periodType': 'year', 'frequencyType': 'daily'})
         except ConnectionError as err:
             print(err)
-            time.sleep(60)
+            time.sleep(120)
             result  = requests.get(f'https://api.tdameritrade.com/v1/marketdata/{ticker}/pricehistory', 
                                 params={'apikey': ameritrade, 'periodType': 'year', 'frequencyType': 'daily'})
         data = result.json()
@@ -74,7 +74,7 @@ def options(ticker):
                             'contractType': 'CALL', 'strategy': 'ANALYTICAL', 'strikeCount': '1'})
     except (ConnectionResetError, RemoteDisconnected):
         print('Connection Resetting, 10 seconds')
-        time.sleep(10)
+        time.sleep(60)
         ticker = ticker.upper()
         result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
                             params={'apikey': ameritrade, 'symbol': ticker,
@@ -112,6 +112,7 @@ def add_ta(df):
     df['MA100'] = df['close'].rolling(window=100).mean()
     df['Volume20MA'] = df['volume'].rolling(window=20).mean()
     df['RSI'] = stats['rsi']
+    df['MACD'] = stats['macdh']
     x = 0
     l = []
     for n in df['close']:

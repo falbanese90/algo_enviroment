@@ -1,9 +1,6 @@
-from ast import And, expr_context
-from operator import truediv
 from .chart import price, plot
 from .vol_premium import iv_prem as vol
-from .toolbox import timer, class_exc_handler
-import pandas as pd
+from .toolbox import timer
 
 from chart import vol_premium
 
@@ -49,13 +46,31 @@ class Equity():
             return False
 
     @property
+    def macd_positive(self):
+        if self.chart['MACD'][-1] > 0:
+            return True
+        else:
+            return False
+
+    @property
+    def volume_positive(self):
+        if self.chart['volume'][-1] > self.chart['Volume20MA'][-1]:
+            return True
+        else:
+            return False
+
+    @property
     def is_buy(self):
         counter = 0
         if self.intermediate_trend:
             counter += 1
         if self.rsi_positive:
             counter += 1
-        if counter == 2:
+        if self.macd_positive:
+            counter += 1
+        if self.volume_positive:
+            counter += 1
+        if counter == 4:
             return True
         else:
             return False

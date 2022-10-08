@@ -4,3 +4,4 @@ __pycache__
 pre_m
 errors.json
 ameritrade_ticker_fails.pkl
+env

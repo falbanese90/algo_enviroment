@@ -9,7 +9,7 @@ import numpy as np
 from .alpaca_tools import get_df
 from requests.exceptions import ConnectionError
 from stockstats import wrap
-
+from pandas_datareader import data
 
 
 def price(ticker):
@@ -135,3 +135,7 @@ def add_ta(df):
     df['HV'] = list
     df.set_index('datetime', inplace=True)
     return df
+
+def market_cap(ticker):
+        market_cap = data.get_quote_yahoo(ticker.upper())['marketCap']
+        return market_cap[-1]

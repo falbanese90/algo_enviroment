@@ -1,13 +1,10 @@
 import csv
 import os
-from config import ROOT_PATH, TICKER_PATH
 from chart import model
 import random
 import pickle as pkl
 from .alpaca_tools import api
 
-
-PATH = ROOT_PATH + TICKER_PATH
 
 def alpaca_active(exchange='None'):
     tick_list = []
@@ -57,3 +54,4 @@ def index_pkl(file):
             print( f'{n}: Unable to load data')
             fail_count += 1
     print(f'Fails: {fail_count}\nOut of: {len(t)} requests')
+

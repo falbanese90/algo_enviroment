@@ -5,6 +5,8 @@ import random
 import traceback
 import time
 from chart.trade import buy
+from chart.alpaca_tools import buying_power
+import math
 
 def run():
     x = 0
@@ -21,8 +23,10 @@ def run():
                 print(obj_data)
                 success_count += 1
                 x += 1
+                size = (obj_data.position_size * buying_power) / obj_data.price
+                buy_qty = round(size, 0)
                 if obj_data.is_buy == True:
-                    buy(obj_data.name, 5)
+                    buy(obj_data.name, buy_qty)
                 if success_count % 1000 == 0:
                     time.sleep(120)
                 elif success_count % 50 == 0:

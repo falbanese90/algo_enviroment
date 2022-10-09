@@ -1,4 +1,4 @@
-from .chart import price, plot
+from .chart import price, plot, market_cap
 from .vol_premium import iv_prem as vol
 from .toolbox import timer
 
@@ -86,11 +86,41 @@ class Equity():
         except (KeyError, TypeError):
             return str(None)
 
+    @property
+    def MC(self):
+        try:
+            mc = market_cap(self.name)
+            if mc >= 10000000000:
+                return 'Large'
+            elif 2000000000 <= mc < 10000000000:
+                return 'Mid'
+            elif 300000000 <= mc < 2000000000:
+                return 'Small'
+            else:
+                return 'Micro'
+        except (IndexError, KeyError):
+            return 'Unknown'
+
+    @property
+    def position_size(self):
+        if self.MC != 'Unknown':
+            return .04
+        else:
+            if self.MC == 'Large':
+                return .12
+            elif self.MC == 'Mid':
+                return .09
+            elif self.MC == 'Small':
+                return .06
+            else:
+                return .05
+
+
     def __str__(self):
         return (f'{self.name}: {self.price}\n'
                f'Historical Vol: {self.hist_vol}\n'
                f'Implied Vol: {self.iv}\n'
-               f'Vol Premium: {self.vol_prem}\nBuy: {self.is_buy}\n')
+               f'Vol Premium: {self.vol_prem}\nBuy: {self.is_buy}\nMarket Cap: {self.MC}\nPosition Size: {self.position_size * 100}%\n')
 
 
 

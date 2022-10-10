@@ -60,6 +60,13 @@ class Equity():
             return False
 
     @property
+    def bollinger_positive(self):
+        if self.price <= self.chart['bollinger'][-1]:
+            return True
+        else:
+            return False
+
+    @property
     def is_buy(self):
         counter = 0
         if self.intermediate_trend:
@@ -69,6 +76,8 @@ class Equity():
         if self.macd_positive:
             counter += 1
         if self.volume_positive:
+            counter += 1
+        if self.bollinger_positive:
             counter += 1
         if counter == 4:
             return True

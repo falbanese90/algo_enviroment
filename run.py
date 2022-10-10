@@ -6,7 +6,7 @@ import traceback
 import time
 from chart.trade import buy
 from chart.alpaca_tools import buying_power
-import math
+from chart.send_msg import send_error
 
 def run():
     x = 0
@@ -24,17 +24,18 @@ def run():
                 success_count += 1
                 x += 1
                 size = (obj_data.position_size * buying_power) / obj_data.price
-                buy_qty = round(size, 0)
+                buy_qty = int(round(size, 0))
                 if obj_data.is_buy == True:
                     buy(obj_data.name, buy_qty)
                 if success_count % 1000 == 0:
                     time.sleep(120)
                 elif success_count % 50 == 0:
-                    time.sleep(60)
+                    time.sleep(80)
                 
             except (KeyError, TypeError, AttributeError, ConnectionError, RemoteDisconnected) as error:
                 print( f'{n}: Unable to load data')
                 print(f'{error}\n')
+                send_error(error)
                 fail_count += 1
                 errors_json[f'{n}'] = f'{traceback.extract_tb(error.__traceback__)}', f'{error}'
                 ameritrade_ticker_fails = [n for n in errors_json.keys()]

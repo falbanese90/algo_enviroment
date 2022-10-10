@@ -21,7 +21,7 @@ def price(ticker):
                                 'projection': 'fundamental'})
         except ConnectionError as err:
             print(err)
-            time.sleep(60)
+            time.sleep(120)
             ticker = ticker.upper()
             result = requests.get('https://api.tdameritrade.com/v1/instruments',
                                 params={'apikey': ameritrade, 'symbol': ticker,
@@ -113,6 +113,7 @@ def add_ta(df):
     df['Volume20MA'] = df['volume'].rolling(window=20).mean()
     df['RSI'] = stats['rsi']
     df['MACD'] = stats['macdh']
+    df['bollinger'] = stats['boll']
     x = 0
     l = []
     for n in df['close']:

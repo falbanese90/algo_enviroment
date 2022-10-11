@@ -28,9 +28,9 @@ def run():
                 if obj_data.is_buy == True:
                     buy(obj_data.name, buy_qty)
                 if success_count % 1000 == 0:
-                    time.sleep(120)
-                elif success_count % 50 == 0:
                     time.sleep(60)
+                elif success_count % 50 == 0:
+                    time.sleep(30)
                 
             except (KeyError, TypeError, AttributeError, ConnectionError, RemoteDisconnected) as error:
                 print( f'{n}: Unable to load data')

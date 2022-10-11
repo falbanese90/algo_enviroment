@@ -13,39 +13,11 @@ from pandas_datareader import data
 
 
 def price(ticker):
-    try:
-        try:
-            ticker = ticker.upper()
-            result = requests.get('https://api.tdameritrade.com/v1/instruments',
-                                params={'apikey': ameritrade, 'symbol': ticker,
-                                'projection': 'fundamental'})
-        except ConnectionError as err:
-            print(err)
-            time.sleep(120)
-            ticker = ticker.upper()
-            result = requests.get('https://api.tdameritrade.com/v1/instruments',
-                                params={'apikey': ameritrade, 'symbol': ticker,
-                                'projection': 'fundamental'})
-        data = result.json()
-        fd = data[ticker]['fundamental'] if 'fundamental' in data[ticker] else None
-        try:
-            result  = requests.get(f'https://api.tdameritrade.com/v1/marketdata/{ticker}/pricehistory', 
-                                params={'apikey': ameritrade, 'periodType': 'year', 'frequencyType': 'daily'})
-        except ConnectionError as err:
-            print(err)
-            time.sleep(120)
-            result  = requests.get(f'https://api.tdameritrade.com/v1/marketdata/{ticker}/pricehistory', 
-                                params={'apikey': ameritrade, 'periodType': 'year', 'frequencyType': 'daily'})
-        data = result.json()
-        df = get_chart(data)
-        dict = {'chart': df, 'fundamental': fd}
-        return dict
-    except KeyError:
-        df = get_df(ticker)
-        df = add_ta(df)
-        fd = None
-        dict = {'chart': df, 'fundamental': fd}
-        return dict
+    df = get_df(ticker)
+    df = add_ta(df)
+    fd = None
+    dict = {'chart': df, 'fundamental': fd}
+    return dict
 
 
 def plot(dataframe, title, save_png=False):

@@ -1,14 +1,10 @@
 from asyncore import write
-from http.client import RemoteDisconnected
-from xmlrpc.client import ResponseError
 import chart
 import random
 import traceback
 import time
-from chart.trade import buy
-from chart.alpaca_tools import buying_power
-from chart.send_msg import send_error
 import csv
+from chart.db import cur, conn
 
 def run():
     rows = []
@@ -26,6 +22,8 @@ def run():
                 print(f'Succeses: {success_count}')
                 x += 1
                 rows.append([obj_data.name, obj_data.price, obj_data.chart['MA10'][-1], obj_data.chart['MA20'][-1], obj_data.chart['Volume20MA'][-1], obj_data.chart['RSI'][-1], obj_data.chart['MACD'][-1], obj_data.chart['HV'][-1], obj_data.is_buy])
+                cur.execute('INSERT INTO stocks (name, price, buy) VALUES (%s, %s, %s)', (str(obj_data.name), float(obj_data.price), str(obj_data.is_buy)))
+                conn.commit()
                 if success_count % 1000 == 0:
                     time.sleep(240)
                 elif success_count % 50 == 0:

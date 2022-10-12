@@ -99,14 +99,17 @@ class Equity():
     def MC(self):
         try:
             mc = market_cap(self.name)
-            if mc >= 10000000000:
-                return 'Large'
-            elif 2000000000 <= mc < 10000000000:
-                return 'Mid'
-            elif 300000000 <= mc < 2000000000:
-                return 'Small'
+            if mc != None:
+                if mc >= 10000000000:
+                    return 'Large'
+                elif 2000000000 <= mc < 10000000000:
+                    return 'Mid'
+                elif 300000000 <= mc < 2000000000:
+                    return 'Small'
+                else:
+                    return 'Micro'
             else:
-                return 'Micro'
+                return 'Unknown'
         except (IndexError, KeyError):
             return 'Unknown'
 

@@ -1,0 +1,74 @@
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/connectionpool.py", line 703, in urlopen
+    httplib_response = self._make_request(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/connectionpool.py", line 449, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/connectionpool.py", line 444, in _make_request
+    httplib_response = conn.getresponse()
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/http/client.py", line 1374, in getresponse
+    response.begin()
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/http/client.py", line 287, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/requests/adapters.py", line 440, in send
+    resp = conn.urlopen(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/connectionpool.py", line 785, in urlopen
+    retries = retries.increment(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/util/retry.py", line 550, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/packages/six.py", line 769, in reraise
+    raise value.with_traceback(tb)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/connectionpool.py", line 703, in urlopen
+    httplib_response = self._make_request(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/connectionpool.py", line 449, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/urllib3/connectionpool.py", line 444, in _make_request
+    httplib_response = conn.getresponse()
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/http/client.py", line 1374, in getresponse
+    response.begin()
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/http/client.py", line 287, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/frankelia/Desktop/Projects 2022/Portfolio/stock_algo/run.py", line 22, in run
+    obj_data = chart.Equity(n)
+  File "/Users/frankelia/Desktop/Projects 2022/Portfolio/stock_algo/chart/toolbox.py", line 9, in wrapper
+    function(*args)
+  File "/Users/frankelia/Desktop/Projects 2022/Portfolio/stock_algo/chart/model.py", line 11, in __init__
+    self.price = price(ticker.upper())['chart']['close'].iloc[-1]
+  File "/Users/frankelia/Desktop/Projects 2022/Portfolio/stock_algo/chart/chart.py", line 16, in price
+    df = get_df(ticker)
+  File "/Users/frankelia/Desktop/Projects 2022/Portfolio/stock_algo/chart/alpaca_tools.py", line 17, in get_df
+    df = api.get_bars(ticker, TimeFrame.Day, last_year, yesterday, adjustment='raw').df
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/alpaca_trade_api/rest.py", line 714, in get_bars
+    bars = list(self.get_bars_iter(symbol,
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/alpaca_trade_api/rest.py", line 698, in get_bars_iter
+    for bar in bars:
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/alpaca_trade_api/rest.py", line 585, in _data_get
+    resp = self.data_get(path, data=data, feed=feed,
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/alpaca_trade_api/rest.py", line 270, in data_get
+    return self._request(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/alpaca_trade_api/rest.py", line 213, in _request
+    return self._one_request(method, url, opts, retry)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/alpaca_trade_api/rest.py", line 232, in _one_request
+    resp = self._session.request(method, url, **opts)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/requests/sessions.py", line 529, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/requests/sessions.py", line 645, in send
+    r = adapter.send(request, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/requests/adapters.py", line 501, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))

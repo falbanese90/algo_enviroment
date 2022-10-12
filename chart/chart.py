@@ -1,4 +1,3 @@
-from http.client import RemoteDisconnected
 import requests
 import pandas as pd
 import time
@@ -10,11 +9,15 @@ from .alpaca_tools import get_df
 from requests.exceptions import ConnectionError
 from stockstats import wrap
 from pandas_datareader import data
+from requests.exceptions import ConnectionError
 
 
 def price(ticker):
     df = get_df(ticker)
-    df = add_ta(df)
+    try:
+        df = add_ta(df)
+    except (KeyError, TypeError):
+        return
     fd = None
     dict = {'chart': df, 'fundamental': fd}
     return dict
@@ -44,8 +47,8 @@ def options(ticker):
         result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
                             params={'apikey': ameritrade, 'symbol': ticker,
                             'contractType': 'CALL', 'strategy': 'ANALYTICAL', 'strikeCount': '1'})
-    except (ConnectionResetError, RemoteDisconnected):
-        print('Connection Resetting, 10 seconds')
+    except ConnectionError as error:
+        print(error)
         time.sleep(60)
         ticker = ticker.upper()
         result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
@@ -110,5 +113,8 @@ def add_ta(df):
     return df
 
 def market_cap(ticker):
-        market_cap = data.get_quote_yahoo(ticker.upper())['marketCap']
-        return market_cap[-1]
+        try:
+            market_cap = data.get_quote_yahoo(ticker.upper())['marketCap']
+            return market_cap[-1]
+        except Exception:
+            return None

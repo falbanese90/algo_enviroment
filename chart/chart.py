@@ -13,6 +13,11 @@ from requests.exceptions import ConnectionError
 
 
 def price(ticker):
+    ''' 
+    Uses Alpaca to recieve price data in order to return
+    a dictionary object with DataFrame and Fundamental
+    JSON. The Fundamental data has been removed for now.
+    '''
     df = get_df(ticker)
     try:
         df = add_ta(df)
@@ -24,6 +29,7 @@ def price(ticker):
 
 
 def plot(dataframe, title, save_png=False):
+    ''' Plots the DataFrame to a PNG '''
     plt.figure(figsize=[16, 8])
     plt.plot(dataframe['close'], label=title)
     plt.plot(dataframe['MA10'], label='MA10')
@@ -42,6 +48,10 @@ def plot(dataframe, title, save_png=False):
 
 
 def options(ticker):
+    ''' 
+    Attempts to recieve Options Data from Ameritrade API
+    If successful returns the most recent monthly Implied Vol
+    '''
     try:
         ticker = ticker.upper()
         result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
@@ -49,7 +59,7 @@ def options(ticker):
                             'contractType': 'CALL', 'strategy': 'ANALYTICAL', 'strikeCount': '1'})
     except ConnectionError as error:
         print(error)
-        time.sleep(60)
+        time.sleep(30)
         ticker = ticker.upper()
         result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
                             params={'apikey': ameritrade, 'symbol': ticker,
@@ -70,6 +80,7 @@ def options(ticker):
         return strike[0]
 
 def get_chart(data_request_json):
+    ''' Parses data into Dataframe from Ameritrade price request '''
     for n in data_request_json['candles']:
         n['datetime'] = pd.to_datetime(n['datetime'], unit='ms').strftime('%m/%d/%Y')
 
@@ -79,6 +90,7 @@ def get_chart(data_request_json):
     return df
 
 def add_ta(df):
+    ''' Adds additional Technical Analysis to Raw DataFrame '''
     df = df.iloc[:, ::-1]
     stats = wrap(df)
     df['MA10'] = df['close'].rolling(window=10).mean()
@@ -113,8 +125,9 @@ def add_ta(df):
     return df
 
 def market_cap(ticker):
-        try:
-            market_cap = data.get_quote_yahoo(ticker.upper())['marketCap']
-            return market_cap[-1]
-        except Exception:
-            return None
+    ''' Attempts to Find Market Cap from Yahoo data '''
+    try:
+        market_cap = data.get_quote_yahoo(ticker.upper())['marketCap']
+        return market_cap[-1]
+    except Exception:
+        return None

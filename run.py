@@ -25,7 +25,7 @@ def run():
                 cur.execute('INSERT INTO stocks (date, name, price, buy) VALUES (%s, %s, %s, %s)', (str(obj_data.chart.index[-1]), str(obj_data.name), float(obj_data.price), str(obj_data.is_buy)))
                 conn.commit()
                 if success_count % 1000 == 0:
-                    time.sleep(240)
+                    time.sleep(120)
                 elif success_count % 50 == 0:
                     time.sleep(30)
             except Exception:

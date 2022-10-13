@@ -2,6 +2,7 @@ from .alpaca_tools import api
 
 
 def alpaca_active(exchange='None'):
+    ''' Returns a cleaned list of all active Alpaca Tickers '''
     tick_list = []
     refined_list = []
     active_assets = api.list_assets(status='active')

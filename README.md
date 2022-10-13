@@ -10,6 +10,7 @@ contains:
 
 ## Config File
 > You must create a config.py file in the root directory containing the following variables and their values.
+> You must have a postgres server running
 
 
 
@@ -19,9 +20,14 @@ contains:
 | ALPACA_KEY=        |                                                                                        | Your Alpaca API Key                                                                                                           |
 | ALPACA_SECRET= |                                                                                        | Your Alpaca API Secret Key       
 | ameritrade= |                                                                                        | Your Td Ameritrade API Secret Key                                                              
-
+| HOST= |                                                                                        | Postgres Host IP or 'localhost'
+| PORT= |                                                                                        | Postgres Port
+| DATABASE= |                                                                                        | Postgres Database Name  
 > ## Run
 ```pip3 install -r requirements.txt```
+
+``` python3 db_up.py ```
+
 
 > ### To run the algo as is 
 > **WARNING**: Intended for PAPER TRADING ONLY

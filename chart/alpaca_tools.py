@@ -16,7 +16,14 @@ buying_power = float(account.buying_power)
 def get_df(ticker):
     ''' Retrieves price data from alpaca API '''
     time.sleep(.5)
-    df = api.get_bars(ticker, TimeFrame.Day, last_year, yesterday, adjustment='raw').df
-    df['datetime'] = pd.to_datetime(df.index, unit='ms').strftime('%m/%d/%Y')
+    df = api.get_bars(
+        ticker, TimeFrame.Day, 
+        last_year, yesterday, 
+        adjustment='raw'
+        ).df
+    df['datetime'] = pd.to_datetime(
+        df.index, 
+        unit='ms'
+        ).strftime('%m/%d/%Y')
     return df
 

@@ -9,8 +9,16 @@ def iv_prem(ticker):
         #print(f'Implied Vol: {stock_iv["volatility"]}')
         if stock_iv != None:
             result = round(100 * ((stock_iv['volatility'] - stock_chart.iloc[-1]
-                    ['HV']) / stock_chart.iloc[-1]['HV']), 3)
-            stock = {'historical_vol': stock_chart.iloc[-1]['HV'], 'implied_vol': stock_iv['volatility'], 'premium': result}
+                    ['HV']) / stock_chart.iloc[-1]['HV']), 3)        
+            stock = {
+                'historical_vol': stock_chart.iloc[-1]['HV'], 
+                'implied_vol': stock_iv['volatility'], 
+                'premium': result
+                }
             return stock
         else:
-            stock = {'historical_vol': stock_chart.iloc[-1]['HV'], 'implied_vol': str(None), 'premium': str(None)}
+            stock = {
+                'historical_vol': stock_chart.iloc[-1]['HV'], 
+                'implied_vol': str(None), 
+                'premium': str(None)
+                }

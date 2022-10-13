@@ -143,10 +143,15 @@ class Equity():
 
     def __str__(self):
         ''' Returns String Representation of Object '''
-        return (f'{self.name}: {self.price}\n'
-               f'Historical Vol: {self.hist_vol}\n'
-               f'Implied Vol: {self.iv}\n'
-               f'Vol Premium: {self.vol_prem}\nBuy: {self.is_buy}\nMarket Cap: {self.MC}\nPosition Size: {self.position_size * 100}%\n')
+        return (
+                    f'{self.name}: {self.price}\n'
+                    f'Historical Vol: {self.hist_vol}\n'
+                    f'Implied Vol: {self.iv}\n'
+                    f'Vol Premium: {self.vol_prem}\n'
+                    f'Buy: {self.is_buy}\n'
+                    f'Market Cap: {self.MC}\n'
+                    f'Position Size: {self.position_size * 100}%\n'
+               )
 
 
 

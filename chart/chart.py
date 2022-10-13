@@ -54,16 +54,28 @@ def options(ticker):
     '''
     try:
         ticker = ticker.upper()
-        result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
-                            params={'apikey': ameritrade, 'symbol': ticker,
-                            'contractType': 'CALL', 'strategy': 'ANALYTICAL', 'strikeCount': '1'})
+        result = requests.get(
+            'https://api.tdameritrade.com/v1/marketdata/chains',
+                            params={
+                                'apikey': ameritrade, 
+                                'symbol': ticker,
+                                'contractType': 'CALL', 
+                                'strategy': 'ANALYTICAL', 
+                                'strikeCount': '1'
+                                })
     except ConnectionError as error:
         print(error)
         time.sleep(30)
         ticker = ticker.upper()
-        result = requests.get('https://api.tdameritrade.com/v1/marketdata/chains',
-                            params={'apikey': ameritrade, 'symbol': ticker,
-                            'contractType': 'CALL', 'strategy': 'ANALYTICAL', 'strikeCount': '1'})
+        result = requests.get(
+            'https://api.tdameritrade.com/v1/marketdata/chains',
+                            params={
+                                'apikey': ameritrade, 
+                                'symbol': ticker,
+                                'contractType': 'CALL', 
+                                'strategy': 'ANALYTICAL', 
+                                'strikeCount': '1'
+                                })
     data = result.json()
     exp = [n for n in data['callExpDateMap'].keys()]
     strike = {}
@@ -82,7 +94,10 @@ def options(ticker):
 def get_chart(data_request_json):
     ''' Parses data into Dataframe from Ameritrade price request '''
     for n in data_request_json['candles']:
-        n['datetime'] = pd.to_datetime(n['datetime'], unit='ms').strftime('%m/%d/%Y')
+        n['datetime'] = pd.to_datetime(
+            n['datetime'], 
+            unit='ms').strftime('%m/%d/%Y'
+            )
 
     candles = data_request_json['candles']
     df = pd.DataFrame.from_dict(candles)

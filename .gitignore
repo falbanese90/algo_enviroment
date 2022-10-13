@@ -6,3 +6,4 @@ errors.json
 ameritrade_ticker_fails.pkl
 env
 .DS_Store
+error.txt

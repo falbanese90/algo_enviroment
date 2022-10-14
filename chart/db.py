@@ -1,10 +1,8 @@
-from unicodedata import name
 import psycopg2
 from config import HOST, PORT, DATABASE
 import csv
 import pandas as pd
 from .alpaca_tools import get_df
-from .toolbox import timer
 
 ## Establish Postgres Connection
 conn = psycopg2.connect(host=HOST, port=PORT, database=DATABASE)
@@ -39,14 +37,15 @@ def export_csv(filename):
             writer.writerow(n)
         return file
 
-def buy_mask():
+def first_test():
     buys = fetch_buys()
     refined_buys = []
     for b in buys:
         df = get_df(b, years_back=5)
         perc_over_low = ((df['close'][-1] - df['close'].min()) / df['close'].min()) * 100
         if perc_over_low >= 15 and float(df['close'][-1]) >= 5:
-            refined_buys.append(b)
-    return refined_buys
-
+            cur.execute("UPDATE stocks SET first_test='Pass' WHERE name=(%s)",(
+                b
+            ) )
+            conn.commit()
         

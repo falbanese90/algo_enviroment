@@ -3,7 +3,7 @@ import chart
 import random
 import traceback
 import time
-from chart.db import cur, conn, fetch_buys
+from chart.db import cur, conn, fetch_buys, first_test
 from chart.alpaca_tools import alpaca_active
 
 def run():
@@ -52,8 +52,7 @@ def run():
         with open('error.txt', 'w') as file:
             file.write(f'{traceback.format_exc()}')
     
-    buys = fetch_buys()
-    return buys
+    first_test()
     
 
 

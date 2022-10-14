@@ -9,5 +9,5 @@ def send_error(msg):
     client.messages.create(
         body=f'{msg}', 
         from_=twilio_number, 
-        to='+16313009484'
+        to='+00000000000'
         )

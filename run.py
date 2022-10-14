@@ -4,12 +4,13 @@ import random
 import traceback
 import time
 from chart.db import cur, conn, fetch_buys
+from chart.alpaca_tools import alpaca_active
 
 def run():
     rows = []
     x = 0
     success_count = 0
-    t = chart.alpaca_active(exchange='NASDAQ')
+    t = alpaca_active(exchange='NASDAQ')
     random.shuffle(t)
     try:
         for n in t:

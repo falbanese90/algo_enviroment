@@ -10,7 +10,10 @@ from requests.exceptions import ConnectionError
 from stockstats import wrap
 from pandas_datareader import data
 from requests.exceptions import ConnectionError
+from datetime import datetime
 
+weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+day_of_the_week = datetime.now().strftime('%A')
 
 def price(ticker):
     ''' 
@@ -18,7 +21,10 @@ def price(ticker):
     a dictionary object with DataFrame and Fundamental
     JSON. The Fundamental data has been removed for now.
     '''
-    df = get_df(ticker)
+    if day_of_the_week in weekdays:
+        df = get_df(ticker)
+    else:
+        df = get_df(ticker, weekend=True)
     try:
         df = add_ta(df)
     except (KeyError, TypeError):

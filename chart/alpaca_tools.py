@@ -13,24 +13,46 @@ yesterday = (datetime.datetime.now() - relativedelta(days=1)).strftime('%Y-%m-%d
 account = api.get_account()
 buying_power = float(account.buying_power)
 
-def get_df(ticker, years_back=1):
+def get_df(ticker, years_back=1, weekend=False):
     ''' Retrieves price data from alpaca API '''
     time.sleep(.5)
-    last_year = (
+    if weekend:
+        if datetime.datetime.now().strftime('%A') == 'Saturday':
+            yesterday = (datetime.datetime.now() - relativedelta(days=1)).strftime('%Y-%m-%d')
+        elif datetime.datetime.now().strftime('%A') == 'Sunday':
+            yesterday = (datetime.datetime.now() - relativedelta(days=2)).strftime('%Y-%m-%d')
+        last_year = (
         datetime.datetime.now() - relativedelta(
             years=years_back
             )
         ).strftime('%Y-%m-%d')
-    df = api.get_bars(
-        ticker, TimeFrame.Day, 
-        last_year, yesterday, 
-        adjustment='raw'
-        ).df
-    df['datetime'] = pd.to_datetime(
-        df.index, 
-        unit='ms'
-        ).strftime('%m/%d/%Y')
-    return df
+        df = api.get_bars(
+            ticker, TimeFrame.Day, 
+            last_year, yesterday, 
+            adjustment='raw'
+            ).df
+        df['datetime'] = pd.to_datetime(
+            df.index, 
+            unit='ms'
+            ).strftime('%m/%d/%Y')
+        return df
+    else:
+        yesterday = (datetime.datetime.now() - relativedelta(days=1)).strftime('%Y-%m-%d')
+        last_year = (
+            datetime.datetime.now() - relativedelta(
+                years=years_back
+                )
+            ).strftime('%Y-%m-%d')
+        df = api.get_bars(
+            ticker, TimeFrame.Day, 
+            last_year, yesterday, 
+            adjustment='raw'
+            ).df
+        df['datetime'] = pd.to_datetime(
+            df.index, 
+            unit='ms'
+            ).strftime('%m/%d/%Y')
+        return df
 
 def get_df_months(ticker, months_back=2):
     time.sleep(.5)

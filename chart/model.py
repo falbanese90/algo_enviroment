@@ -1,11 +1,7 @@
 from .chart import price, plot, market_cap
 from .vol_premium import iv_prem as vol
-from .toolbox import timer
-
-from chart import vol_premium
 
 class Equity():
-    @timer
     def __init__(self, ticker):
         ''' Uses Data from API Requests to create Equity object '''
         self.name = str(ticker.upper())

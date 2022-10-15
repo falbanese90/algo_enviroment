@@ -1,13 +1,17 @@
-from asyncore import write
 import chart
 import random
 import traceback
 import time
-from chart.db import cur, conn, fetch_buys, first_test
+from chart.db import cur, conn
 from chart.alpaca_tools import alpaca_active
+from chart.chart import day_of_the_week
+
 
 def run():
     ''' Recieves list of all active names on alpaca and scans them one by one for technical data, tests data for buy signal. Returns data to Postgres Database '''
+    if day_of_the_week == 'Sunday':
+        print('No work to be done today\n')
+        return
     rows = []
     x = 0
     success_count = 0
@@ -19,6 +23,7 @@ def run():
                 time.sleep(.5)
                 obj_data = chart.Equity(n)
                 success_count += 1
+                print('Success')
                 x += 1
                 rows.append([
                 obj_data.name, 

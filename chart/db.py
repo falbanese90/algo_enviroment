@@ -2,7 +2,10 @@ import psycopg2
 from config import HOST, PORT, DATABASE
 import csv
 import pandas as pd
-from .alpaca_tools import get_df
+from .alpaca_tools import get_df, get_df_months
+from tqdm import tqdm
+from requests.exceptions import HTTPError
+import time
 
 ## Establish Postgres Connection
 conn = psycopg2.connect(host=HOST, port=PORT, database=DATABASE)
@@ -24,7 +27,7 @@ def fetch_all(df=False):
         row = [x for x in n]
         rows.append(row[1 ::])
     if df == True:
-        df = pd.DataFrame(rows, columns=['Date', 'Name', 'Price', 'Buy'])
+        df = pd.DataFrame(rows, columns=['Date', 'Name', 'Price', 'Buy', 'First_Test'])
         return df
     else:
         return rows
@@ -38,14 +41,18 @@ def export_csv(filename):
         return file
 
 def first_test():
-    buys = fetch_buys()
-    refined_buys = []
-    for b in buys:
-        df = get_df(b, years_back=5)
-        perc_over_low = ((df['close'][-1] - df['close'].min()) / df['close'].min()) * 100
-        if perc_over_low >= 15 and float(df['close'][-1]) >= 5:
-            cur.execute("UPDATE stocks SET first_test='Pass' WHERE name=(%s)",(
-                b
-            ) )
-            conn.commit()
+    ''' Screens current buy list for stocks 15% or more over the 5 year low. '''
+    try:
+        buys = fetch_buys()
+        refined_buys = []
+        for b in tqdm(buys):
+            df = get_df(b, years_back=5)
+            perc_over_low = ((df['close'][-1] - df['close'].min()) / df['close'].min()) * 100
+            if perc_over_low >= 15 and float(df['close'][-1]) >= 5:
+                refined_buys.append(b)
+        return refined_buys
+
+    except HTTPError as err:
+        print(err)
+        return refined_buys
         

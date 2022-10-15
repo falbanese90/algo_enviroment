@@ -32,12 +32,30 @@ def get_df(ticker, years_back=1):
         ).strftime('%m/%d/%Y')
     return df
 
+def get_df_months(ticker, months_back=2):
+    time.sleep(.5)
+    last_year = (
+        datetime.datetime.now() - relativedelta(
+            months=months_back
+            )
+        ).strftime('%Y-%m-%d')
+    df = api.get_bars(
+        ticker, TimeFrame.Day, 
+        last_year, yesterday, 
+        adjustment='raw'
+        ).df
+    df['datetime'] = pd.to_datetime(
+        df.index, 
+        unit='ms'
+        ).strftime('%m/%d/%Y')
+    return df
+
 def alpaca_active(exchange='None'):
     ''' Returns a cleaned list of all active Alpaca Tickers '''
     active_assets = api.list_assets(status='active')
     if exchange != 'None':
         active_assets = [n for n in active_assets if n.exchange == exchange.upper()]
-    active_assets = [n for n in active_assets if 'Acquisition' not in n.name or 'Receipts' not in n.name]
+    active_assets = [n for n in active_assets if 'Acquisition' not in n.name or 'Receipts' not in n.name or 'Shares' not in n.name or 'Fund' not in n.name or 'ETF' not in n.name]
     tick_list = [n.symbol.split('/')[0] for n in active_assets]
     refined_list = [n for n in tick_list if len(n) < 5 or '.' not in n]
     return refined_list

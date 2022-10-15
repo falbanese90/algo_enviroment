@@ -7,6 +7,7 @@ from chart.db import cur, conn, fetch_buys, first_test
 from chart.alpaca_tools import alpaca_active
 
 def run():
+    ''' Recieves list of all active names on alpaca and scans them one by one for technical data, tests data for buy signal. Returns data to Postgres Database '''
     rows = []
     x = 0
     success_count = 0
@@ -17,9 +18,7 @@ def run():
             try:
                 time.sleep(.5)
                 obj_data = chart.Equity(n)
-                print(obj_data)
                 success_count += 1
-                print(f'Succeses: {success_count}')
                 x += 1
                 rows.append([
                 obj_data.name, 
@@ -51,8 +50,6 @@ def run():
     except Exception:
         with open('error.txt', 'w') as file:
             file.write(f'{traceback.format_exc()}')
-    
-    first_test()
     
 
 

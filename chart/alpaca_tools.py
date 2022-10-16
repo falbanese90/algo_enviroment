@@ -21,6 +21,8 @@ def get_df(ticker, years_back=1, weekend=False):
             yesterday = (datetime.datetime.now() - relativedelta(days=1)).strftime('%Y-%m-%d')
         elif datetime.datetime.now().strftime('%A') == 'Sunday':
             yesterday = (datetime.datetime.now() - relativedelta(days=2)).strftime('%Y-%m-%d')
+        elif datetime.datetime.now().strftime('%A') == 'Monday':
+            yesterday = (datetime.datetime.now() - relativedelta(days=3)).strftime('%Y-%m-%d')
         last_year = (
         datetime.datetime.now() - relativedelta(
             years=years_back

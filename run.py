@@ -2,14 +2,14 @@ import chart
 import random
 import traceback
 import time
-from chart.db import cur, conn
+from chart.db import cur, conn, test_buys
 from chart.alpaca_tools import alpaca_active
 from chart.chart import day_of_the_week
 
 
 def run():
     ''' Recieves list of all active names on alpaca and scans them one by one for technical data, tests data for buy signal. Returns data to Postgres Database '''
-    if day_of_the_week == 'Sunday':
+    if day_of_the_week == 'Sunday' or day_of_the_week == 'Monday':
         print('No work to be done today\n')
         return
     rows = []
@@ -60,3 +60,4 @@ def run():
 
 if __name__ == '__main__':
     run()
+    

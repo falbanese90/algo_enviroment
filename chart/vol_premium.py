@@ -22,3 +22,4 @@ def iv_prem(ticker):
                 'implied_vol': str(None), 
                 'premium': str(None)
                 }
+            return stock

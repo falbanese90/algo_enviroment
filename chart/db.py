@@ -51,7 +51,7 @@ def export_csv(filename):
 def test_buys():
     ''' Screens current buy list for stocks 15% or more over the 5 year low. '''
     try:
-        buys = fetch_buys()[:50]
+        buys = fetch_buys()
         refined_buys = perc_over_test(buys)
         if len(refined_buys) > 0:
             refined_again = vol_premium_test(refined_buys)

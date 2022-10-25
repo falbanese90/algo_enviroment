@@ -1,11 +1,12 @@
 from .alpaca_tools import api
 from alpaca_trade_api.rest import APIError
+import chart.db as db
 
 account = api.get_account()
-large_pos = (.12 * float(account.buying_power))
-mid_position = (.09 * float(account.buying_power))
-small_position = (.06 * float(account.buying_power))
-default_position = (.05 * float(account.buying_power))
+large_pos = (.12 * float(20000))
+mid_position = (.09 * float(20000))
+small_position = (.06 * float(20000))
+default_position = (.05 * float(20000))
 
 def position_qty(price, size=default_position):
     q = round((size / price), 0)
@@ -34,3 +35,33 @@ def buy_bracket(ticker, price, size=None):
         print(err)
         return
 
+def close_position(symbol, qty):
+    try:
+        api.submit_order(
+            symbol=symbol,
+            qty=qty,
+            side='sell',
+            type='market',
+            time_in_force='gtc',
+        )
+    except APIError as err:
+        print(err)
+        return
+
+def close_nulled_buys():
+    buys = db.fetch_buys()
+    positions_symbols = [n.symbol for n in api.list_positions()]
+    not_buy = lambda x: x not in buys
+    closeout = []
+    close_filter = filter(not_buy, positions_symbols)
+    for n in close_filter:
+        closeout.append(n)
+    orders = api.list_orders(symbols=closeout)
+    for n in orders:
+        api.cancel_order(n.id)
+    for n in positions_symbols:
+        qty = api.get_position(n).qty
+        close_position(n, qty)
+
+
+    

@@ -1,5 +1,5 @@
 from chart.db import test_buys
-from chart.trade import buy_bracket, close_nulled_buys
+from chart.trade import buy_bracket, close_nulled_buys, positions
 from chart.model import Equity
 import time
 from chart.chart import day_of_the_week, weekdays
@@ -11,8 +11,11 @@ def trade():
         buys = test_buys()
         for ticker in tqdm(buys):
             asset = Equity(ticker)
-            buy_bracket(asset.name, asset.price)
-            time.sleep(5)
+            if ticker not in positions:
+                buy_bracket(asset.name, asset.price, asset.stop)
+                time.sleep(5)
+            else:
+                pass
     else:
         print('Its an off day..')
         time.sleep(5)

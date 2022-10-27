@@ -1,19 +1,22 @@
 from .alpaca_tools import api
 from alpaca_trade_api.rest import APIError
 import chart.db as db
+import time
 
-account = api.get_account()
-large_pos = (.12 * float(20000))
-mid_position = (.09 * float(20000))
-small_position = (.06 * float(20000))
-default_position = (.05 * float(20000))
+## Create Scales of Position sizing frames
+large_pos = (.12 * float(90000))
+mid_position = (.09 * float(90000))
+small_position = (.06 * float(90000))
+default_position = (.05 * float(90000))
+
+## Call api for a list of current positions
+positions = [n.symbol for n in api.list_positions()]
 
 def position_qty(price, size=default_position):
     q = round((size / price), 0)
     return q
 
-
-def buy_bracket(ticker, price, size=None):
+def buy_bracket(ticker, price, stop, size=None):
     ''' Submits Buy order '''
     try:
         api.submit_order(
@@ -22,15 +25,17 @@ def buy_bracket(ticker, price, size=None):
             side='buy',
             type='market',
             time_in_force='gtc',
-            order_class='bracket',
-            take_profit=dict(
-                limit_price = round(price + (.15 * price), 2)
-            ),
-            stop_loss=dict(
-                stop_price = round(price - (price * .05), 2),
-                limit_price = round(price - (price * .05), 2)
-            )
         )
+        time.sleep(1)
+        api.submit_order(
+            symbol=ticker,
+            qty=position_qty(price),
+            side='sell',
+            type='trailing_stop',
+            time_in_force='gtc',
+            trail_percent=stop
+        )
+
     except APIError as err:
         print(err)
         return

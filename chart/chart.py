@@ -122,6 +122,7 @@ def add_ta(df):
     df['RSI'] = stats['rsi']
     df['MACD'] = stats['macdh']
     df['bollinger'] = stats['boll']
+    df['atr'] = stats['atr']
     x = 0
     l = []
     for n in df['close']:

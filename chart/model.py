@@ -32,6 +32,11 @@ class Equity():
             return str(None)
 
     @property
+    def stop(self):
+        s = float(round(((self.chart['atr'][-1] / self.price) * 100), 2))
+        return s
+
+    @property
     def intermediate_trend(self):
         ''' Checks if there is a intermediate trend in tact '''
         if self.chart['MA10'][-1] > self.chart['MA20'][-1]:

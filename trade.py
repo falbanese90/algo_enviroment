@@ -12,7 +12,7 @@ def trade():
         for ticker in tqdm(buys):
             asset = Equity(ticker)
             if ticker not in positions:
-                buy_bracket(asset.name, asset.price, asset.stop)
+                buy_bracket(asset.name, asset.price, asset.stop, position_size=asset.position_size)
                 time.sleep(5)
             else:
                 pass

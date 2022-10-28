@@ -1,3 +1,4 @@
+from re import S
 from .alpaca_tools import api
 from alpaca_trade_api.rest import APIError
 import chart.db as db
@@ -12,30 +13,58 @@ default_position = (.05 * float(90000))
 ## Call api for a list of current positions
 positions = [n.symbol for n in api.list_positions()]
 
-def position_qty(price, size=default_position):
-    q = round((size / price), 0)
+def position_qty(price, size='default'):
+    if size == 'default':
+        position_size = default_position
+    elif size == 'Large':
+        position_size = large_pos
+    elif size == 'Mid':
+        position_size = mid_position
+    elif size == 'Small':
+        position_size = small_position
+    else:
+        position_size = default_position
+    
+    q = round((position_size / price), 0)
     return q
 
-def buy_bracket(ticker, price, stop, size=None):
+def buy_bracket(ticker, price, stop, position_size=None):
     ''' Submits Buy order '''
     try:
-        api.submit_order(
-            symbol=ticker,
-            qty=position_qty(price),
-            side='buy',
-            type='market',
-            time_in_force='gtc',
-        )
-        time.sleep(1)
-        api.submit_order(
-            symbol=ticker,
-            qty=position_qty(price),
-            side='sell',
-            type='trailing_stop',
-            time_in_force='gtc',
-            trail_percent=stop
-        )
-
+        if position_size == None:
+            api.submit_order(
+                symbol=ticker,
+                qty=position_qty(price),
+                side='buy',
+                type='market',
+                time_in_force='gtc',
+            )
+            time.sleep(1)
+            api.submit_order(
+                symbol=ticker,
+                qty=position_qty(price),
+                side='sell',
+                type='trailing_stop',
+                time_in_force='gtc',
+                trail_percent=stop
+            )
+        else:
+            api.submit_order(
+                symbol=ticker,
+                qty=position_qty(price, size=position_size),
+                side='buy',
+                type='market',
+                time_in_force='gtc',
+            )
+            time.sleep(1)
+            api.submit_order(
+                symbol=ticker,
+                qty=position_qty(price, size=position_size),
+                side='sell',
+                type='trailing_stop',
+                time_in_force='gtc',
+                trail_percent=stop
+            )
     except APIError as err:
         print(err)
         return
